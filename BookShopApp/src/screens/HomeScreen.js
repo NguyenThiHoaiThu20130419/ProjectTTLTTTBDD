@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     paddingVertical: 5,
+    height: 40,
   },
   cartButton: {
     marginLeft: 15,

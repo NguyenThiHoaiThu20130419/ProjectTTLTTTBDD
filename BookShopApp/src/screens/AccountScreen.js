@@ -1,15 +1,21 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const AccountScreen = () => {
+  const navigation = useNavigation();
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Avatar */}
       <View style={styles.avatarContainer}>
         <Ionicons name="happy-outline" size={80} color="#8a2be2" />
         <Text style={styles.welcomeText}>Chào mừng bạn đến với T&T</Text>
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity 
+          style={styles.loginButton}
+          onPress={() => navigation.navigate('Login')}
+          >
           <Text style={styles.loginButtonText}>Đăng nhập / Đăng ký tài khoản</Text>
         </TouchableOpacity>
       </View>

@@ -3,10 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
-import HomeScreen from './src/screens/HomeScreen';
+import HomeStackNavigator from './src/screens/HomeStackNavigator';
 import CategoriesScreen from './src/screens/CategoriesScreen';
-import AccountScreen from './src/screens/AccountScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
+import AccountStackNavigator from './src/screens/AccountStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,13 +25,13 @@ const App = () => {
           },
           tabBarActiveTintColor: '#8a2be2',
           tabBarInactiveTintColor: 'gray',
-          headerShown: false, // Ẩn header mặc định của navigation
+          headerShown: false,
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Trang chủ' }} />
+        <Tab.Screen name="Home" component={HomeStackNavigator} options={{ tabBarLabel: 'Trang chủ' }} />
         <Tab.Screen name="Categories" component={CategoriesScreen} options={{ tabBarLabel: 'Danh mục' }} />
         <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarLabel: 'Thông báo' }} />
-        <Tab.Screen name="Account" component={AccountScreen} options={{ tabBarLabel: 'Tài khoản' }} />
+        <Tab.Screen name="Account" component={AccountStackNavigator} options={{ tabBarLabel: 'Tài khoản' }} />
       </Tab.Navigator>
     </NavigationContainer>
   );
