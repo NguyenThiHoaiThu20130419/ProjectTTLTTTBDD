@@ -1,18 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './HomeScreen';
+import CategoriesScreen from './CategoriesScreen';
 import CartScreen from './CartScreen';
 
 const Stack = createStackNavigator();
 
-const HomeStackNavigator = () => {
+const CategoriesStackNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen 
-        name="HomeStack" 
-        component={HomeScreen} 
+        name="CategoriesStack" 
+        component={CategoriesScreen} 
         options={{ 
-          title: 'Trang chủ', 
+          title: 'Danh mục', 
           headerStyle: {
             height: 50,
           },
@@ -27,4 +27,4 @@ const HomeStackNavigator = () => {
   );
 };
 
-export default HomeStackNavigator;
+export default CategoriesStackNavigator;

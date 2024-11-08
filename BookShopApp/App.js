@@ -6,9 +6,9 @@ import { Provider } from 'react-redux';
 import { store } from './src/redux/Store';
 
 import HomeStackNavigator from './src/screens/HomeStackNavigator';
-import CategoriesScreen from './src/screens/CategoriesScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
 import AccountStackNavigator from './src/screens/AccountStackNavigator';
+import CategoriesStackNavigator from './src/screens/CategoriesStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +32,7 @@ const App = () => {
           })}
         >
           <Tab.Screen name="Home" component={HomeStackNavigator} options={{ tabBarLabel: 'Trang chủ' }} />
-          <Tab.Screen name="Categories" component={CategoriesScreen} options={{ tabBarLabel: 'Danh mục' }} />
+          <Tab.Screen name="Categories" component={CategoriesStackNavigator} options={{ tabBarLabel: 'Danh mục' }} />
           <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarLabel: 'Thông báo' }} />
           <Tab.Screen name="Account" component={AccountStackNavigator} options={{ tabBarLabel: 'Tài khoản' }} />
         </Tab.Navigator>
