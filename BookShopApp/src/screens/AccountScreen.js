@@ -2,22 +2,43 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux'; 
+import { logout } from '../redux/Auth/Action';
 
 const AccountScreen = () => {
   const navigation = useNavigation();
-  
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user); // Lấy thông tin user từ Redux store
+
+  // Hàm xử lý đăng xuất
+  const handleLogout = () => {
+    dispatch(logout()); // Thực hiện hành động logout
+    navigation.navigate('Login'); // Quay về trang đăng nhập
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Avatar */}
       <View style={styles.avatarContainer}>
-        <Ionicons name="happy-outline" size={80} color="#8a2be2" />
-        <Text style={styles.welcomeText}>Chào mừng bạn đến với T&T</Text>
-        <TouchableOpacity 
-          style={styles.loginButton}
-          onPress={() => navigation.navigate('Login')}
+        <Ionicons name="happy-outline" size={80} color="#0000FF" />
+        <Text style={styles.welcomeText}>
+          {user ? `Chào mừng ${user.firstName} ${user.lastName} đến với T&T` : 'Chào mừng bạn đến với T&T'}
+        </Text>
+
+        {user ? (
+          // Nút Đăng xuất nếu đã đăng nhập
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
+            <Text style={styles.loginButtonText}>Đăng xuất</Text>
+          </TouchableOpacity>
+        ) : (
+          // Nút Đăng nhập / Đăng ký tài khoản nếu chưa đăng nhập
+          <TouchableOpacity 
+            style={styles.loginButton}
+            onPress={() => navigation.navigate('Login')}
           >
-          <Text style={styles.loginButtonText}>Đăng nhập / Đăng ký tài khoản</Text>
-        </TouchableOpacity>
+            <Text style={styles.loginButtonText}>Đăng nhập / Đăng ký tài khoản</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Đơn hàng của tôi */}
@@ -35,8 +56,8 @@ const AccountScreen = () => {
       <View style={styles.section}>
         <View style={styles.reviewContainer}>
           <Text style={styles.sectionTitle}>Đánh giá sản phẩm</Text>
-          <TouchableOpacity style={styles.arrowButton} onPress={() => {/* Chuyển hướng đến màn hình đánh giá */}}>
-            <Ionicons name="chevron-forward" size={20} color="#8a2be2" />
+          <TouchableOpacity style={styles.arrowButton}>
+            <Ionicons name="chevron-forward" size={20} color="#0000FF" />
           </TouchableOpacity>
         </View>
       </View>
@@ -71,7 +92,7 @@ const AccountScreen = () => {
 // Component trạng thái đơn hàng
 const OrderStatus = ({ icon, label }) => (
   <View style={styles.orderItem}>
-    <Ionicons name={icon} size={30} color="#8a2be2" />
+    <Ionicons name={icon} size={30} color="#0000FF" />
     <Text style={styles.orderLabel}>{label}</Text>
   </View>
 );
@@ -79,7 +100,7 @@ const OrderStatus = ({ icon, label }) => (
 // Component mục quan tâm
 const InterestItem = ({ icon, label }) => (
   <View style={styles.interestItem}>
-    <Ionicons name={icon} size={30} color="#8a2be2" />
+    <Ionicons name={icon} size={30} color="#0000FF" />
     <Text style={styles.interestLabel}>{label}</Text>
   </View>
 );
@@ -92,6 +113,7 @@ const mockProducts = [
   { name: 'Sản phẩm 4', price: '400.000đ', image: 'https://via.placeholder.com/100' },
 ];
 
+// Style cho AccountScreen
 const styles = StyleSheet.create({
   container: {
     padding: 10,
@@ -110,13 +132,13 @@ const styles = StyleSheet.create({
   loginButton: {
     marginTop: 10,
     borderWidth: 1,
-    borderColor: '#8a2be2',
+    borderColor: '#0000FF',
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 20,
   },
   loginButtonText: {
-    color: '#8a2be2',
+    color: '#0000FF',
     fontSize: 16,
   },
   section: {

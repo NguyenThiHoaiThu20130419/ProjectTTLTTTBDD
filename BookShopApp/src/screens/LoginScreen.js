@@ -1,31 +1,54 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/Auth/Action';
 
 const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector(state => state.auth);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    dispatch(login({ email, password }, navigation)); 
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Chào Mừng Bạn Đến Với T&T</Text>
 
-      {/* Username Input */}
       <TextInput 
         style={styles.input} 
-        placeholder="Tên đăng nhập" 
+        placeholder="Email*" 
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
       />
 
-      {/* Password Input */}
       <TextInput 
         style={styles.input} 
-        placeholder="Mật khẩu" 
+        placeholder="Password*" 
         secureTextEntry 
+        value={password}
+        onChangeText={setPassword}
       />
 
-      {/* Login Button */}
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Đăng nhập</Text>
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
+      <TouchableOpacity 
+        style={styles.loginButton} 
+        onPress={handleLogin} 
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Đăng nhập</Text>
+        )}
       </TouchableOpacity>
 
-      {/* Message for new users with navigation */}
       <View style={styles.newAccountContainer}>
         <Text style={styles.newAccountPrompt}>Bạn chưa có tài khoản?</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
@@ -33,20 +56,17 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Or continue with */}
       <Text style={styles.orContinueText}>Hoặc tiếp tục bằng</Text>
 
-      {/* Social Icons */}
       <View style={styles.socialContainer}>
         <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="logo-facebook" size={30} color="#8a2be2" />
+          <Ionicons name="logo-facebook" size={30} color="#0000FF" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="logo-google" size={30} color="#8a2be2" />
+          <Ionicons name="logo-google" size={30} color="#0000FF" />
         </TouchableOpacity>
       </View>
 
-      {/* Terms and Conditions Text */}
       <Text style={styles.termsText}>
         <Text style={styles.termsBoldText}>
           Bằng việc tiếp tục, bạn đã đọc và đồng ý điều khoản sử dụng, chính sách bảo mật thông tin cá nhân của T&T
@@ -67,18 +87,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#8a2be2',
+    color: '#0000FF',
     marginBottom: 50, 
   },
   input: {
     width: '100%',
     height: 50,
-    borderColor: '#8a2be2',
+    borderColor: '#0000FF',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10, 
     backgroundColor: '#fff',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
   },
   newAccountContainer: {
     flexDirection: 'row',
@@ -93,13 +117,13 @@ const styles = StyleSheet.create({
   },
   newAccountText: {
     fontSize: 14,
-    color: '#8a2be2',
+    color: '#0000FF',
     fontStyle: 'italic',
   },
   loginButton: {
     width: '100%',
     height: 50,
-    backgroundColor: '#8a2be2',
+    backgroundColor: '#0000FF',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
@@ -108,7 +132,6 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: '#fff',
     fontSize: 16,
-
   },
   orContinueText: {
     marginVertical: 5, 

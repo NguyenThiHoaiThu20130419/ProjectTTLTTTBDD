@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#8a2be2',
+    backgroundColor: '#0000FF',
     elevation: 3,
     shadowColor: '#000',
     shadowOpacity: 0.1,
