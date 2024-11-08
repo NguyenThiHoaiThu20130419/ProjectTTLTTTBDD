@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "PhoneShopApp",
-    "slug": "PhoneShopApp",
+    "name": "BookShopApp",
+    "slug": "BookShopApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

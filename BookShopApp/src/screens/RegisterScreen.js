@@ -1,38 +1,72 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../redux/Auth/Action';
 
 const RegisterScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector(state => state.auth);
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = () => {
+    const userData = { firstName, lastName, email, password };
+    dispatch(register(userData, navigation)); 
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Chào Mừng Bạn Đến Với T&T</Text>
 
-      {/* Username Input */}
+      <View style={styles.nameContainer}>
+        <TextInput 
+          style={[styles.input, styles.halfInput]} 
+          placeholder="First Name*" 
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <TextInput 
+          style={[styles.input, styles.halfInput]} 
+          placeholder="Last Name*" 
+          value={lastName}
+          onChangeText={setLastName}
+        />
+      </View>
+
       <TextInput 
         style={styles.input} 
-        placeholder="Tên đăng nhập" 
+        placeholder="Email*" 
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
       />
 
-      {/* Password Input */}
       <TextInput 
         style={styles.input} 
-        placeholder="Mật khẩu" 
+        placeholder="Password*" 
         secureTextEntry 
+        value={password}
+        onChangeText={setPassword}
       />
 
-      {/* Confirm Password Input */}
-      <TextInput 
-        style={styles.input} 
-        placeholder="Xác nhận mật khẩu" 
-        secureTextEntry 
-      />
+      {error && <Text style={styles.errorText}>{error}</Text>}
 
-      {/* Register Button */}
-      <TouchableOpacity style={styles.registerButton}>
-        <Text style={styles.registerButtonText}>Đăng ký</Text>
+      <TouchableOpacity 
+        style={styles.registerButton} 
+        onPress={handleRegister} 
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.registerButtonText}>Đăng ký</Text>
+        )}
       </TouchableOpacity>
 
-      {/* Message for existing users with navigation */}
       <View style={styles.existingAccountContainer}>
         <Text style={styles.existingAccountPrompt}>Bạn đã có tài khoản?</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -40,20 +74,17 @@ const RegisterScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Or continue with */}
       <Text style={styles.orContinueText}>Hoặc tiếp tục bằng</Text>
 
-      {/* Social Icons */}
       <View style={styles.socialContainer}>
         <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="logo-facebook" size={30} color="#8a2be2" />
+          <Ionicons name="logo-facebook" size={30} color="#0000FF" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="logo-google" size={30} color="#8a2be2" />
+          <Ionicons name="logo-google" size={30} color="#0000FF" />
         </TouchableOpacity>
       </View>
 
-      {/* Terms and Conditions Text */}
       <Text style={styles.termsText}>
         <Text style={styles.termsBoldText}>
           Bằng việc tiếp tục, bạn đã đọc và đồng ý điều khoản sử dụng, chính sách bảo mật thông tin cá nhân của T&T
@@ -74,24 +105,37 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#8a2be2',
-    marginBottom: 30, 
+    color: '#0000FF',
+    marginBottom: 30,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
+  halfInput: {
+    width: '48%',
   },
   input: {
     width: '100%',
     height: 50,
-    borderColor: '#8a2be2',
+    borderColor: '#0000FF',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginBottom: 10, 
+    marginBottom: 10,
     backgroundColor: '#fff',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
   },
   existingAccountContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20, 
+    marginBottom: 20,
   },
   existingAccountPrompt: {
     fontSize: 14,
@@ -100,24 +144,24 @@ const styles = StyleSheet.create({
   },
   existingAccountText: {
     fontSize: 14,
-    color: '#8a2be2',
+    color: '#0000FF',
     fontStyle: 'italic',
   },
   registerButton: {
     width: '100%',
     height: 50,
-    backgroundColor: '#8a2be2',
+    backgroundColor: '#0000FF',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    marginBottom: 30, 
+    marginBottom: 30,
   },
   registerButtonText: {
     color: '#fff',
     fontSize: 16,
   },
   orContinueText: {
-    marginVertical: 5, 
+    marginVertical: 5,
     color: '#333',
   },
   socialContainer: {
@@ -133,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     color: '#333',
-    marginTop: 10, 
+    marginTop: 10,
   },
   termsBoldText: {
     fontWeight: 'bold',
