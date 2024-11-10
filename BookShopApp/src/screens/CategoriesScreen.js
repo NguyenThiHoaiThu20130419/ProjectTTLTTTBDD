@@ -1,125 +1,170 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const CategoriesScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('1'); // Lưu danh mục đã chọn
+  const [selectedCategory, setSelectedCategory] = useState('1');
+  const [sortOption, setSortOption] = useState('popularity');
 
-  // Dữ liệu giả định cho danh mục
   const categories = [
-    { id: '1', name: 'Hướng nghiệp & phát triển bản thân' },
-    { id: '2', name: 'Tâm lý học' },
-    { id: '3', name: 'Văn học kinh điển' },
-    { id: '4', name: 'Văn học lãng mạn' },
-    { id: '5', name: 'Truyện tranh' },
+    { id: '1', name: 'Hướng nghiệp', image: 'https://via.placeholder.com/100' },
+    { id: '2', name: 'Tâm lý học', image: 'https://via.placeholder.com/100' },
+    { id: '3', name: 'Văn học kinh điển', image: 'https://via.placeholder.com/100' },
+    { id: '4', name: 'Văn học lãng mạn', image: 'https://via.placeholder.com/100' },
+    { id: '5', name: 'Truyện tranh', image: 'https://via.placeholder.com/100' },
   ];
 
-  // Dữ liệu giả định cho sản phẩm
   const mockProducts = [
-    { id: '1', categoryId: '1', name: 'Sản phẩm 1', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '2', categoryId: '1', name: 'Sản phẩm 2', price: '200.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '3', categoryId: '1', name: 'Sản phẩm 3', price: '300.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '4', categoryId: '1', name: 'Sản phẩm 4', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '5', categoryId: '1', name: 'Sản phẩm 5', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '6', categoryId: '1', name: 'Sản phẩm 6', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '7', categoryId: '1', name: 'Sản phẩm 7', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '8', categoryId: '1', name: 'Sản phẩm 8', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '9', categoryId: '1', name: 'Sản phẩm 9', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '10', categoryId: '1', name: 'Sản phẩm 10', price: '100.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '11', categoryId: '2', name: 'Sản phẩm 11', price: '400.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '12', categoryId: '2', name: 'Sản phẩm 12', price: '500.000đ', image: 'https://via.placeholder.com/100' },
-    { id: '13', categoryId: '3', name: 'Sản phẩm 13', price: '600.000đ', image: 'https://via.placeholder.com/100' },
+    { id: '1', categoryId: '1', name: 'Sản phẩm 1', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
+    { id: '2', categoryId: '1', name: 'Sản phẩm 2', price: 200000, rating: 5, image: 'https://via.placeholder.com/100' },
+    { id: '3', categoryId: '1', name: 'Sản phẩm 3', price: 300000, rating: 3, image: 'https://via.placeholder.com/100' },
+    { id: '4', categoryId: '1', name: 'Sản phẩm 4', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
+    { id: '5', categoryId: '2', name: 'Sản phẩm 5', price: 500000, rating: 5, image: 'https://via.placeholder.com/100' },
+    { id: '6', categoryId: '2', name: 'Sản phẩm 6', price: 400000, rating: 4, image: 'https://via.placeholder.com/100' },
+    { id: '7', categoryId: '3', name: 'Sản phẩm 7', price: 300000, rating: 3, image: 'https://via.placeholder.com/100' },
+    { id: '8', categoryId: '3', name: 'Sản phẩm 8', price: 600000, rating: 5, image: 'https://via.placeholder.com/100' },
+    { id: '9', categoryId: '3', name: 'Sản phẩm 9', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
+    { id: '10', categoryId: '3', name: 'Sản phẩm 10', price: 200000, rating: 5, image: 'https://via.placeholder.com/100' },
+    { id: '11', categoryId: '3', name: 'Sản phẩm 11', price: 300000, rating: 3, image: 'https://via.placeholder.com/100' },
+    { id: '12', categoryId: '3', name: 'Sản phẩm 12', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
+    { id: '13', categoryId: '3', name: 'Sản phẩm 13', price: 100000, rating: 5, image: 'https://via.placeholder.com/100' },
+    { id: '14', categoryId: '3', name: 'Sản phẩm 14', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
+    { id: '15', categoryId: '3', name: 'Sản phẩm 15', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
   ];
 
-  // Hàm lọc sản phẩm theo danh mục
   const filterProductsByCategory = (categoryId) => {
     return mockProducts.filter(product => product.categoryId === categoryId);
   };
 
+  const handleSort = (option) => {
+    setSortOption(option);
+  };
+
+  const sortProducts = (products) => {
+    switch (sortOption) {
+      case 'popularity':
+        return products;
+      case 'bestSelling':
+        return products.sort((a, b) => b.price - a.price);
+      case 'newest':
+        return products.reverse();
+      case 'priceAsc':
+        return products.sort((a, b) => a.price - b.price);
+      case 'priceDesc':
+        return products.sort((a, b) => b.price - a.price);
+      default:
+        return products;
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Tiêu đề phía trên ô tìm kiếm */}
-      <View style={styles.header}>
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="gray" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Tìm kiếm sách..."
-            value={searchQuery}
-            onChangeText={(text) => setSearchQuery(text)}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.cartButton}
-          onPress={() => navigation.navigate('Cart')} // Chuyển đến màn hình Giỏ hàng
-        >
-          <Ionicons name="cart-outline" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
+    <FlatList
+      data={[{ id: 'header' }]}
+      keyExtractor={(item) => item.id}
+      renderItem={() => (
+        <View style={styles.container}>
+          {/* Header */}
+          <View style={styles.header}>
+            <View style={styles.searchContainer}>
+              <Ionicons name="search" size={20} color="gray" style={styles.searchIcon} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Tìm kiếm sách..."
+                value={searchQuery}
+                onChangeText={(text) => setSearchQuery(text)}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.cartButton}
+              onPress={() => navigation.navigate('Cart')}
+            >
+              <Ionicons name="cart-outline" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
 
-      {/* Chính sách đổi trả */}
-      <View style={styles.returnPolicy}>
-        <Text style={styles.returnPolicyText}>15 Ngày Đổi Ý và Miễn Phí Trả Hàng</Text>
-      </View>
+          {/* 15 Ngày Đổi Ý & Trả Hàng */}
+          <View style={styles.returnPolicy}>
+            <Text style={styles.returnPolicyText}>15 Ngày Đổi Ý và Miễn Phí Trả Hàng</Text>
+          </View>
 
-      {/* Nội dung màn hình Danh mục */}
-      <View style={styles.content}>
-        <View style={styles.row}>
-          {/* Cột bên trái: Tên danh mục */}
-          <View style={styles.categoriesColumn}>
-            <Text style={styles.suggestionTitle}>Danh mục sản phẩm</Text>
+          {/* Danh mục sản phẩm */}
+          <View style={styles.categoriesContainer}>
+            <Text style={styles.suggestionTitle}>Mua sắm theo danh mục</Text>
             <FlatList
               data={categories}
+              horizontal
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
-                  style={[
-                    styles.categoryItem,
-                    selectedCategory === item.id && styles.selectedCategory,
-                  ]}
-                  onPress={() => setSelectedCategory(item.id)} // Khi nhấn vào danh mục, thay đổi màu nền và sản phẩm
+                  style={[styles.categoryItem, selectedCategory === item.id && styles.selectedCategory]}
+                  onPress={() => setSelectedCategory(item.id)}
                 >
+                  <Image source={{ uri: item.image }} style={styles.categoryImage} />
                   <Text style={styles.categoryName}>{item.name}</Text>
+                  {selectedCategory === item.id && <View style={styles.selectedLine} />}
                 </TouchableOpacity>
               )}
             />
           </View>
 
-          {/* Cột bên phải: Sản phẩm của danh mục */}
-          <View style={styles.productsColumn}>
+          {/* Thanh Menu Ngang */}
+          <View style={styles.menuBar}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort('popularity')}>
+              <Text style={[styles.menuText, sortOption === 'popularity' && styles.selectedMenuText]}>Phổ biến</Text>
+            </TouchableOpacity>
+            <View style={styles.separator} />
+            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort('bestSelling')}>
+              <Text style={[styles.menuText, sortOption === 'bestSelling' && styles.selectedMenuText]}>Bán chạy</Text>
+            </TouchableOpacity>
+            <View style={styles.separator} />
+            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort('newest')}>
+              <Text style={[styles.menuText, sortOption === 'newest' && styles.selectedMenuText]}>Mới nhất</Text>
+            </TouchableOpacity>
+            <View style={styles.separator} />
+            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort(sortOption === 'priceAsc' ? 'priceDesc' : 'priceAsc')}>
+              <Text style={[styles.menuText, sortOption === 'priceAsc' || sortOption === 'priceDesc' ? styles.selectedMenuText : null]}>
+                Giá {sortOption === 'priceAsc' ? <Ionicons name="arrow-up" size={14} /> : <Ionicons name="arrow-down" size={14} />}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Hiển thị sản phẩm */}
+          <View style={styles.productsContainer}>
             <FlatList
-              data={filterProductsByCategory(selectedCategory)} // Hiển thị sản phẩm theo danh mục đã chọn
-              keyExtractor={(product) => product.id}
-              numColumns={3} // Hiển thị 3 sản phẩm mỗi dòng
+              data={sortProducts(filterProductsByCategory(selectedCategory))}
+              keyExtractor={(item) => item.id}
+              numColumns={2}
               renderItem={({ item }) => (
                 <View style={styles.productItem}>
                   <Image source={{ uri: item.image }} style={styles.productImage} />
                   <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>{item.price.toLocaleString()}đ</Text>
+                  <View style={styles.rating}>
+                    {[...Array(item.rating)].map((_, index) => (
+                      <Ionicons key={index} name="star" size={14} color="gold" />
+                    ))}
+                  </View>
                 </View>
               )}
             />
           </View>
         </View>
-      </View>
-    </View>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
     backgroundColor: '#0000FF',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -130,93 +175,114 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchIcon: {
-    marginRight: 5,
+    marginRight: 10,
   },
   searchInput: {
     flex: 1,
-    paddingVertical: 5,
     height: 40,
   },
   cartButton: {
-    marginLeft: 15,
+    marginLeft: 10,
   },
   returnPolicy: {
-    backgroundColor: '#FFFF00',
+    margin: 10,
     paddingVertical: 10,
     alignItems: 'center',
-    marginVertical: 10,
-    marginHorizontal: 10,
-    borderRadius: 10,
+    backgroundColor: '#FFFF99',
+    borderRadius: 5, 
   },
   returnPolicyText: {
-    color: 'black',
-    fontSize: 16,
+    fontSize: 14,
+    color: '#333',
     fontWeight: 'bold',
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  categoriesColumn: {
-    flex: 1,
-    padding: 5,
-    backgroundColor: '#87CEFA',
-    borderRadius: 8,
+  categoriesContainer: {
     paddingVertical: 10,
-    marginRight: 10,
-    alignItems: 'center',
-    justifyContent: 'center', 
-  },
-  productsColumn: {
-    flex: 2,
-    paddingTop: 10,
-    paddingLeft: 10,
-    backgroundColor: 'white',
-    borderRadius: 8,
+    backgroundColor: '#fff', 
   },
   suggestionTitle: {
-    fontSize: 18,
+    fontSize: 16,
+    marginLeft: 10,
     fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
+    paddingBottom: 10,
   },
   categoryItem: {
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 10,
-    backgroundColor: '#FFFFFF', // Màu nền mặc định
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
   selectedCategory: {
-    backgroundColor: '#FFFFFF', // Màu nền khi chọn
-    borderWidth: 2,
-    borderColor: '#0000FF', // Viền xanh khi chọn
+    borderBottomWidth: 3,
+    borderBottomColor: 'blue',
+  },
+  categoryImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
   },
   categoryName: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginTop: 5,
+    fontSize: 14,
+  },
+  selectedLine: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 2,
+    backgroundColor: 'blue',
+  },
+  menuBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    marginTop: 10, 
+  },
+  menuItem: {
+    alignItems: 'center',
+  },
+  menuText: {
+    fontSize: 14,
     color: '#333',
   },
+  selectedMenuText: {
+    fontWeight: 'bold',
+    color: 'blue',
+  },
+  separator: {
+    borderLeftWidth: 1,
+    borderColor: '#ddd',
+    height: 20,
+    marginHorizontal: 10,
+  },
+  productsContainer: {
+    flex: 1,
+    padding: 10,
+  },
   productItem: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    width: '48%',
     marginBottom: 15,
-    width: '30%',
-    marginRight: '3%',
+    marginHorizontal: '1%',
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 3, 
   },
   productImage: {
     width: '100%',
-    height: 100,
-    marginBottom: 5,
+    height: 120,
     borderRadius: 8,
   },
   productName: {
+    marginVertical: 5,
     fontSize: 14,
+  },
+  productPrice: {
+    fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#CC0000',
+  },
+  rating: {
+    flexDirection: 'row',
   },
 });
 
