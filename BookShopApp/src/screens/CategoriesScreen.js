@@ -1,62 +1,59 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { findProducts } from '../redux/Product/Action';
 
 const CategoriesScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.product);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('1');
+  const [selectedCategory, setSelectedCategory] = useState('van_hoc');
   const [sortOption, setSortOption] = useState('popularity');
 
   const categories = [
-    { id: '1', name: 'Hướng nghiệp', image: 'https://via.placeholder.com/100' },
-    { id: '2', name: 'Tâm lý học', image: 'https://via.placeholder.com/100' },
-    { id: '3', name: 'Văn học kinh điển', image: 'https://via.placeholder.com/100' },
-    { id: '4', name: 'Văn học lãng mạn', image: 'https://via.placeholder.com/100' },
-    { id: '5', name: 'Truyện tranh', image: 'https://via.placeholder.com/100' },
+    { id: 'van_hoc', name: 'Văn học', image: 'https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lzfw16e58swde0.webp' },
+    { id: 'huong_nghiep', name: 'Hướng nghiệp', image: 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lfj4ve7pfotx8b.webp' },
+    { id: 'tam_ly_hoc', name: 'Tâm lý học', image: 'https://down-vn.img.susercontent.com/file/vn-11134201-7qukw-lexp1gp9qsne82.webp' },
+    { id: 'truyen_tranh', name: 'Truyện tranh', image: 'https://down-vn.img.susercontent.com/file/vn-11134201-7qukw-lgng4s6yjp6a7c.webp' },
+    { id: 'tieng_anh', name: 'Tiếng anh', image: 'https://down-vn.img.susercontent.com/file/6cb1c12e0795252d778b4605e87acc17.webp' },
   ];
 
-  const mockProducts = [
-    { id: '1', categoryId: '1', name: 'Sản phẩm 1', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
-    { id: '2', categoryId: '1', name: 'Sản phẩm 2', price: 200000, rating: 5, image: 'https://via.placeholder.com/100' },
-    { id: '3', categoryId: '1', name: 'Sản phẩm 3', price: 300000, rating: 3, image: 'https://via.placeholder.com/100' },
-    { id: '4', categoryId: '1', name: 'Sản phẩm 4', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
-    { id: '5', categoryId: '2', name: 'Sản phẩm 5', price: 500000, rating: 5, image: 'https://via.placeholder.com/100' },
-    { id: '6', categoryId: '2', name: 'Sản phẩm 6', price: 400000, rating: 4, image: 'https://via.placeholder.com/100' },
-    { id: '7', categoryId: '3', name: 'Sản phẩm 7', price: 300000, rating: 3, image: 'https://via.placeholder.com/100' },
-    { id: '8', categoryId: '3', name: 'Sản phẩm 8', price: 600000, rating: 5, image: 'https://via.placeholder.com/100' },
-    { id: '9', categoryId: '3', name: 'Sản phẩm 9', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
-    { id: '10', categoryId: '3', name: 'Sản phẩm 10', price: 200000, rating: 5, image: 'https://via.placeholder.com/100' },
-    { id: '11', categoryId: '3', name: 'Sản phẩm 11', price: 300000, rating: 3, image: 'https://via.placeholder.com/100' },
-    { id: '12', categoryId: '3', name: 'Sản phẩm 12', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
-    { id: '13', categoryId: '3', name: 'Sản phẩm 13', price: 100000, rating: 5, image: 'https://via.placeholder.com/100' },
-    { id: '14', categoryId: '3', name: 'Sản phẩm 14', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
-    { id: '15', categoryId: '3', name: 'Sản phẩm 15', price: 100000, rating: 4, image: 'https://via.placeholder.com/100' },
-  ];
-
-  const filterProductsByCategory = (categoryId) => {
-    return mockProducts.filter(product => product.categoryId === categoryId);
-  };
-
-  const handleSort = (option) => {
-    setSortOption(option);
-  };
+  useEffect(() => {
+    const requestData = {
+      category: selectedCategory,
+      pageNumber: 0,
+      pageSize: 5,
+    };
+    dispatch(findProducts(requestData));
+  }, [dispatch, selectedCategory]);
 
   const sortProducts = (products) => {
     switch (sortOption) {
-      case 'popularity':
-        return products;
-      case 'bestSelling':
-        return products.sort((a, b) => b.price - a.price);
-      case 'newest':
-        return products.reverse();
       case 'priceAsc':
-        return products.sort((a, b) => a.price - b.price);
+        return [...products].sort((a, b) => a.price - b.price);
       case 'priceDesc':
-        return products.sort((a, b) => b.price - a.price);
+        return [...products].sort((a, b) => b.price - a.price);
       default:
         return products;
     }
   };
+
+  const renderProduct = ({ item }) => (
+    <View style={styles.productItem}>
+      <Image source={{ uri: item.imageUrl || 'https://via.placeholder.com/100' }} style={styles.productImage} />
+      <Text style={styles.productName}>{item.title}</Text>
+      <Text style={styles.productPrice}>{item.price.toLocaleString()} VNĐ</Text>
+    </View>
+  );
 
   return (
     <FlatList
@@ -75,25 +72,22 @@ const CategoriesScreen = ({ navigation }) => {
                 onChangeText={(text) => setSearchQuery(text)}
               />
             </View>
-            <TouchableOpacity
-              style={styles.cartButton}
-              onPress={() => navigation.navigate('Cart')}
-            >
+            <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('Cart')}>
               <Ionicons name="cart-outline" size={24} color="white" />
             </TouchableOpacity>
           </View>
 
-          {/* 15 Ngày Đổi Ý & Trả Hàng */}
+          {/* Return Policy */}
           <View style={styles.returnPolicy}>
             <Text style={styles.returnPolicyText}>15 Ngày Đổi Ý và Miễn Phí Trả Hàng</Text>
           </View>
 
-          {/* Danh mục sản phẩm */}
+          {/* Categories */}
           <View style={styles.categoriesContainer}>
             <Text style={styles.suggestionTitle}>Mua sắm theo danh mục</Text>
             <FlatList
               data={categories}
-              horizontal
+              horizontal={true}  
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity
@@ -105,49 +99,55 @@ const CategoriesScreen = ({ navigation }) => {
                   {selectedCategory === item.id && <View style={styles.selectedLine} />}
                 </TouchableOpacity>
               )}
+              contentContainerStyle={styles.categoriesContent}  // Tạo khoảng cách giữa các danh mục
             />
           </View>
 
-          {/* Thanh Menu Ngang */}
-          <View style={styles.menuBar}>
-            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort('popularity')}>
-              <Text style={[styles.menuText, sortOption === 'popularity' && styles.selectedMenuText]}>Phổ biến</Text>
+          {/* Sort Options */}
+          <View style={styles.sortOptions}>
+            <TouchableOpacity
+              style={[styles.sortButton, sortOption === 'popularity' && styles.selectedSortOption]}
+              onPress={() => setSortOption('popularity')}
+            >
+              <Text style={[styles.sortButtonText, sortOption === 'popularity' && styles.selectedSortOptionText]}>
+                Phổ biến
+              </Text>
             </TouchableOpacity>
             <View style={styles.separator} />
-            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort('bestSelling')}>
-              <Text style={[styles.menuText, sortOption === 'bestSelling' && styles.selectedMenuText]}>Bán chạy</Text>
+            <TouchableOpacity
+              style={[styles.sortButton, sortOption === 'priceAsc' && styles.selectedSortOption]}
+              onPress={() => setSortOption('priceAsc')}
+            >
+              <Text style={[styles.sortButtonText, sortOption === 'priceAsc' && styles.selectedSortOptionText]}>
+                Giá tăng dần
+              </Text>
             </TouchableOpacity>
             <View style={styles.separator} />
-            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort('newest')}>
-              <Text style={[styles.menuText, sortOption === 'newest' && styles.selectedMenuText]}>Mới nhất</Text>
-            </TouchableOpacity>
-            <View style={styles.separator} />
-            <TouchableOpacity style={styles.menuItem} onPress={() => handleSort(sortOption === 'priceAsc' ? 'priceDesc' : 'priceAsc')}>
-              <Text style={[styles.menuText, sortOption === 'priceAsc' || sortOption === 'priceDesc' ? styles.selectedMenuText : null]}>
-                Giá {sortOption === 'priceAsc' ? <Ionicons name="arrow-up" size={14} /> : <Ionicons name="arrow-down" size={14} />}
+            <TouchableOpacity
+              style={[styles.sortButton, sortOption === 'priceDesc' && styles.selectedSortOption]}
+              onPress={() => setSortOption('priceDesc')}
+            >
+              <Text style={[styles.sortButtonText, sortOption === 'priceDesc' && styles.selectedSortOptionText]}>
+                Giá giảm dần
               </Text>
             </TouchableOpacity>
           </View>
 
-          {/* Hiển thị sản phẩm */}
+
+          {/* Products */}
           <View style={styles.productsContainer}>
-            <FlatList
-              data={sortProducts(filterProductsByCategory(selectedCategory))}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-              renderItem={({ item }) => (
-                <View style={styles.productItem}>
-                  <Image source={{ uri: item.image }} style={styles.productImage} />
-                  <Text style={styles.productName}>{item.name}</Text>
-                  <Text style={styles.productPrice}>{item.price.toLocaleString()}đ</Text>
-                  <View style={styles.rating}>
-                    {[...Array(item.rating)].map((_, index) => (
-                      <Ionicons key={index} name="star" size={14} color="gold" />
-                    ))}
-                  </View>
-                </View>
-              )}
-            />
+            {loading ? (
+              <Text style={styles.loadingText}>Đang tải...</Text>
+            ) : error ? (
+              <Text style={styles.errorText}>Lỗi tải dữ liệu: {error}</Text>
+            ) : (
+              <FlatList
+                data={sortProducts(products)}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                renderItem={renderProduct}
+              />
+            )}
           </View>
         </View>
       )}
@@ -183,13 +183,16 @@ const styles = StyleSheet.create({
   },
   cartButton: {
     marginLeft: 10,
+    backgroundColor: '#333',
+    borderRadius: 20,
+    padding: 5,
   },
   returnPolicy: {
     margin: 10,
     paddingVertical: 10,
     alignItems: 'center',
     backgroundColor: '#FFFF99',
-    borderRadius: 5, 
+    borderRadius: 5,
   },
   returnPolicyText: {
     fontSize: 14,
@@ -198,21 +201,21 @@ const styles = StyleSheet.create({
   },
   categoriesContainer: {
     paddingVertical: 10,
-    backgroundColor: '#fff', 
+    backgroundColor: '#fff',
   },
   suggestionTitle: {
     fontSize: 16,
-    marginLeft: 10,
     fontWeight: 'bold',
-    paddingBottom: 10,
+    marginHorizontal: 10,
+    marginBottom: 5,
   },
   categoryItem: {
     alignItems: 'center',
     marginHorizontal: 10,
   },
   selectedCategory: {
-    borderBottomWidth: 3,
-    borderBottomColor: 'blue',
+    borderBottomWidth: 2,
+    borderBottomColor: '#5bc0de',
   },
   categoryImage: {
     width: 60,
@@ -220,39 +223,43 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   categoryName: {
-    marginTop: 5,
     fontSize: 14,
   },
   selectedLine: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
     height: 2,
+    width: '100%',
     backgroundColor: 'blue',
+    marginTop: 5,
   },
-  menuBar: {
+  sortOptions: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingVertical: 10,
+    justifyContent: 'center',
+    marginTop: 10,
     backgroundColor: '#fff',
-    marginTop: 10, 
-  },
-  menuItem: {
+    paddingVertical: 5,
     alignItems: 'center',
   },
-  menuText: {
+  sortButton: {
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    marginHorizontal: 20,
+  },
+  selectedSortOption: {
+    backgroundColor: 'transparent',
+  },
+  sortButtonText: {
     fontSize: 14,
     color: '#333',
   },
-  selectedMenuText: {
+  selectedSortOptionText: {
     fontWeight: 'bold',
     color: 'blue',
   },
   separator: {
-    borderLeftWidth: 1,
-    borderColor: '#ddd',
-    height: 20,
-    marginHorizontal: 10,
+    height: '100%',
+    width: 1,
+    backgroundColor: '#e0e0e0',
   },
   productsContainer: {
     flex: 1,
@@ -265,7 +272,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
     borderRadius: 8,
-    elevation: 3, 
+    elevation: 3,
   },
   productImage: {
     width: '100%',
@@ -273,16 +280,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   productName: {
-    marginVertical: 5,
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'left',
   },
   productPrice: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#CC0000',
   },
-  rating: {
-    flexDirection: 'row',
+  loadingText: {
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  errorText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    color: 'red',
   },
 });
 
