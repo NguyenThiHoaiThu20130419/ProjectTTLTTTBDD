@@ -48,13 +48,13 @@ const CategoriesScreen = ({ navigation }) => {
   };
 
   const renderProduct = ({ item }) => (
-    <View style={styles.productItem}>
+    <TouchableOpacity style={styles.productItem} onPress={() => navigation.navigate('ProductDetails', { product: item })}>
       <Image source={{ uri: item.imageUrl || 'https://via.placeholder.com/100' }} style={styles.productImage} />
       <Text style={styles.productName}>{item.title}</Text>
-      <Text style={styles.productPrice}>{item.price.toLocaleString()} VNĐ</Text>
-    </View>
+      <Text style={styles.productPrice}>{item.discountedPrice.toLocaleString()} VNĐ</Text>
+    </TouchableOpacity>
   );
-
+  
   return (
     <FlatList
       data={[{ id: 'header' }]}
@@ -99,7 +99,7 @@ const CategoriesScreen = ({ navigation }) => {
                   {selectedCategory === item.id && <View style={styles.selectedLine} />}
                 </TouchableOpacity>
               )}
-              contentContainerStyle={styles.categoriesContent}  // Tạo khoảng cách giữa các danh mục
+              contentContainerStyle={styles.categoriesContent}  
             />
           </View>
 
