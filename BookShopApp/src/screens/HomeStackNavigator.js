@@ -14,7 +14,7 @@ const HomeStackNavigator = () => {
         options={{ 
           title: 'Trang chủ', 
           headerStyle: {
-            height: 50,
+            height: 40,
           },
         }} 
       />
